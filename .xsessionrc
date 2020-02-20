@@ -1,0 +1,2 @@
+/home/del/nfancurve/temp.sh &
+xset -display $DISPLAY s off -dpms
