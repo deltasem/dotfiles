@@ -123,9 +123,9 @@ alias disc="cd ~/work/disclosure/src/Prime.Disclosure.Web && yarn run start_e2e_
 
 source <(kubectl completion zsh)
 
-export PATH=$PATH:$HOME/dotnet
-export PATH=$HOME/.dotnet/tools:$PATH
-export DOTNET_ROOT=$HOME/dotnet
+#export PATH=$PATH:$HOME/dotnet
+#export PATH=$HOME/.dotnet/tools:$PATH
+#export DOTNET_ROOT=$HOME/dotnet
 
 source /home/del/.config/broot/launcher/bash/br
 
@@ -138,3 +138,7 @@ FZF_DEFAULT_OPTS="--height 40% --layout reverse --border --preview '(highlight -
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+
+#export DOTNET_ROOT=$HOME/dotnet
+#export PATH=$PATH:$HOME/dotnet
+#export PATH=$PATH:/home/del/.dotnet/tools

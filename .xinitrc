@@ -65,3 +65,5 @@ get_session(){
 }
 
 #exec $(get_session)
+/home/del/nfancurve/temp.sh &
+xset -display $DISPLAY s off -dpms

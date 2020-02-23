@@ -1,3 +1,6 @@
 [user]
 	name = Semen Kiryushin
 	email = s.kiryushin@1prime.ru
+[filesystem "Amazon.com Inc.|11.0.3|/dev/nvme0n1p4"]
+	timestampResolution = 6000 nanoseconds
+	minRacyThreshold = 4314 microseconds
