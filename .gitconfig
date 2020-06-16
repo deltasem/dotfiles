@@ -4,3 +4,5 @@
 [filesystem "Amazon.com Inc.|11.0.3|/dev/nvme0n1p4"]
 	timestampResolution = 6000 nanoseconds
 	minRacyThreshold = 4314 microseconds
+[gc]
+	autoDetach = false

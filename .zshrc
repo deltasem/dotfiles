@@ -73,6 +73,23 @@ ZSH_THEME="af-magic"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git docker docker-compose dotnet git-flow kubectl tmux zsh-autosuggestions zsh-syntax-highlighting)
+# This speeds up pasting w/ autosuggest
+# https://github.com/zsh-users/zsh-autosuggestions/issues/238
+
+pasteinit() {
+  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
+}
+
+pastefinish() {
+  zle -N self-insert $OLD_SELF_INSERT
+}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
+
+
+
+
 
 source $ZSH/oh-my-zsh.sh
 
@@ -121,6 +138,9 @@ alias todisc="cd ~/work/disclosure"
 alias todiscw="cd ~/work/disclosure/src/Prime.Disclosure.Web"
 alias disc="cd ~/work/disclosure/src/Prime.Disclosure.Web && yarn run start_e2e_local"
 
+alias ls='exa -al --color=always --group-directories-first'
+alias la='exa -a --color=always --group-directories-first'
+
 source <(kubectl completion zsh)
 
 #export PATH=$PATH:$HOME/dotnet
@@ -142,3 +162,15 @@ alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 #export DOTNET_ROOT=$HOME/dotnet
 #export PATH=$PATH:$HOME/dotnet
 #export PATH=$PATH:/home/del/.dotnet/tools
+
+export PATH=$PATH:/home/del/.yarn/bin
+export PATH=$PATH:/home/del/go/bin
+
+#neofetch
+
+# The next line updates PATH for Yandex Cloud CLI.
+if [ -f '/home/del/yandex-cloud/path.bash.inc' ]; then source '/home/del/yandex-cloud/path.bash.inc'; fi
+
+# The next line enables shell command completion for yc.
+if [ -f '/home/del/yandex-cloud/completion.zsh.inc' ]; then source '/home/del/yandex-cloud/completion.zsh.inc'; fi
+

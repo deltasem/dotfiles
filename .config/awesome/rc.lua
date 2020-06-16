@@ -1,5 +1,6 @@
 -- Standard awesome library
 local gears = require("gears")
+local lain  = require("lain")
 local awful = require("awful")
 require("awful.autofocus")
 -- Widget and layout library
@@ -12,6 +13,8 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Freedesktop menu
 local freedesktop = require("freedesktop")
+local translate = require("awesome-wm-widgets.translate-widget.translate")
+local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 -- Enable VIM help for hotkeys widget when client with matching name is opened:
 require("awful.hotkeys_popup.keys.vim")
 
@@ -144,6 +147,12 @@ blue        = "#9EBABA"
 red         = "#EB8F8F"
 separator = wibox.widget.textbox(' <span color="' .. blue .. '">| </span>')
 spacer = wibox.widget.textbox(' <span color="' .. blue .. '"> </span>')
+spacer2 = wibox.widget.textbox(' <span color="' .. darkblue .. '"> </span>')
+
+local separators = lain.util.separators
+local spr     = wibox.widget.textbox(' ')
+local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
+local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -205,9 +214,75 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 screen_tags = {
         { "tty", "web", "dev", "con", "git", "rdp", "note", "mail", "chat" },
-        { "r&b", "con", "yrn", "?", "?", "?", "?", "?", "?" },
-        { "web", "svc", "ins", "dbg", "?", "?", "?", "?", "." },
+        { "r&b", "con", "yrn", "dsgn", "?", "?", "?", "?", "?" },
+        { "web", "svc", "ins", "dbg", "tst", "?", "?", "?", "?" },
 }
+
+
+
+local markup = lain.util.markup
+
+-- Textclock
+os.setlocale(os.getenv("LANG")) -- to localize the clock
+local clockicon = wibox.widget.imagebox(theme.widget_clock)
+local mytextclock = wibox.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#ab7367", ">") .. markup("#de5e1e", " %H:%M "))
+mytextclock.font = theme.font
+
+-- Calendar
+--theme.cal = lain.widget.cal({
+--    attach_to = { mytextclock },
+--    notification_preset = {
+--        font = "Noto Sans Mono Medium 10",
+--        fg   = theme.fg_normal,
+--        bg   = theme.bg_normal
+--    }
+--})
+local month_calendar = awful.widget.calendar_popup.month()
+month_calendar:attach( mytextclock, "tr" )
+
+
+-- MEM
+-- theme.widget_mem                                = theme.confdir .. "/icons/mem.png"
+local memicon = wibox.widget.imagebox(theme.widget_mem)
+local memory = lain.widget.mem({
+    settings = function()
+        widget:set_markup(markup.fontfg(theme.font, "#e0da37", mem_now.used .. "M "))
+    end
+})
+
+-- CPU
+local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
+local cpu = lain.widget.cpu({
+    settings = function()
+        widget:set_markup(markup.fontfg(theme.font, "#e33a6e", " " .. string.format("%02.0f", cpu_now.usage) .. "% "))
+    end
+})
+
+-- Coretemp
+local tempicon = wibox.widget.imagebox(theme.widget_temp)
+local temp = lain.widget.temp({
+    tempfile = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon1/temp1_input",
+    settings = function()	
+        widget:set_markup(markup.fontfg(theme.font, "#f1af5f", string.format("%02.1f", coretemp_now) .. "°C "))
+    end
+})
+
+-- Net
+local netdownicon = wibox.widget.imagebox(theme.widget_netdown)
+local netdowninfo = wibox.widget.textbox()
+local netupicon = wibox.widget.imagebox(theme.widget_netup)
+local netupinfo = lain.widget.net({
+    settings = function()
+--        if iface ~= "network off" and
+--           string.match(theme.weather.widget.text, "N/A")
+--        then
+--            theme.weather.update()
+--        end
+
+        widget:set_markup(markup.fontfg(theme.font, "#e54c62", string.format("%06.1f", net_now.sent) .. " "))
+        netdowninfo:set_markup(markup.fontfg(theme.font, "#87af5f", string.format("%06.1f", net_now.received) .. " "))
+    end
+})
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -250,6 +325,29 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+--	    memory,
+            --separator,
+	    --arrl_dl,
+            memicon,
+            memory.widget,
+	    arrl_ld,
+            wibox.container.background(cpuicon, theme.bg_focus),
+            wibox.container.background(cpu.widget, theme.bg_focus),
+	    arrl_dl,
+	    tempicon,
+	    temp,
+	    arrl_ld,
+            wibox.container.background(netdownicon, theme.bg_focus),
+            wibox.container.background(netdowninfo, theme.bg_focus),
+            wibox.container.background(netupicon, theme.bg_focus),
+            wibox.container.background(netupinfo.widget, theme.bg_focus),
+	    arrl_dl,
+	    cpu_widget({
+    width = 70,
+    step_width = 2,
+    step_spacing = 0,
+    color = '#434c5e'
+}),
 	    tray,
             mykeyboardlayout,
             separator,
@@ -316,9 +414,13 @@ globalkeys = gears.table.join(
         {description = "go back", group = "client"}),
 
     -- Standard program
+    awful.key({ modkey }, "c", 
+    function() translate.show_translate_prompt('trnsl.1.1.20200514T060346Z.f9a33d804520e0bb.a158aba3ca14739fd23ac6a2c3749cb49a7b306a') end, 
+    { description = "run translate prompt", group = "launcher" }),
     awful.key({                   }, "#107",      function() awful.util.spawn('flameshot gui') end,
               {description="screenshot", group="launcher"}),
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
+    --awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
+    awful.key({ modkey,           }, "Return", function () awful.util.spawn('alacritty -e fish') end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey,           }, "z", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
@@ -553,6 +655,9 @@ awful.rules.rules = {
     { rule = { class = "Chromium" }, properties = { titlebars_enabled = false, screen = 3, tag = "web" } },
     { rule = { class = "Notable" }, properties = { titlebars_enabled = false, screen = 1, tag = "note" } },
     { rule = { class = "Thunderbird" }, properties = { titlebars_enabled = false, screen = 1, tag = "mail" } },
+    { rule = { class = "Qmmp" }, properties = { titlebars_enabled = false, screen = 1, tag = "tty" } },
+    { rule = { class = "jetbrains-rider", name = "Services - *" }, properties = { screen = 3, tag = "svc" } },
+    { rule = { class = "jetbrains-rider", name = "Unit Tests - *" }, properties = { screen = 3, tag = "tst" } },
 }
 -- }}}
 
@@ -679,5 +784,7 @@ os.execute("pgrep -u $USER -x Telegram || (telegram-desktop &)")
 os.execute("pgrep -u $USER -x slack || (slack &)")
 os.execute("pgrep -u $USER -x notable || (notable &)")
 os.execute("pgrep -u $USER -x thunderbird || (thunderbird &)")
-
+os.execute("pgrep -u $USER -x remmina || (remmina -i &)")
+os.execute("xset -dpms;xset s off")
+os.execute("/home/del/nfancurve/temp.sh &")
 
