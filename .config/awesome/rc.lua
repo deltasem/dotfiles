@@ -215,7 +215,7 @@ screen.connect_signal("property::geometry", set_wallpaper)
 screen_tags = {
         { "tty", "web", "dev", "con", "git", "rdp", "note", "mail", "chat" },
         { "r&b", "con", "yrn", "dsgn", "?", "?", "?", "?", "?" },
-        { "web", "svc", "ins", "dbg", "tst", "?", "?", "?", "?" },
+        { "web", "svc", "ins", "dbg", "tst", "term", "?", "?", "?" },
 }
 
 
@@ -658,6 +658,8 @@ awful.rules.rules = {
     { rule = { class = "Qmmp" }, properties = { titlebars_enabled = false, screen = 1, tag = "tty" } },
     { rule = { class = "jetbrains-rider", name = "Services - *" }, properties = { screen = 3, tag = "svc" } },
     { rule = { class = "jetbrains-rider", name = "Unit Tests - *" }, properties = { screen = 3, tag = "tst" } },
+    { rule = { class = "jetbrains-rider", name = "Terminal - *" }, properties = { screen = 3, tag = "term" } },
+    { rule = { class = "jetbrains-rider", name = "Debug - *" }, properties = { screen = 3, tag = "dbg" } },
 }
 -- }}}
 
@@ -780,7 +782,7 @@ end
 
 awful.spawn.with_shell("~/.config/awesome/autorun.sh")
 os.execute("pgrep -u $USER -x compton || (compton &)")
-os.execute("pgrep -u $USER -x Telegram || (telegram-desktop &)")
+os.execute("pgrep -u $USER -x Telegram || (delay 5; telegram-desktop &)")
 os.execute("pgrep -u $USER -x slack || (slack &)")
 os.execute("pgrep -u $USER -x notable || (notable &)")
 os.execute("pgrep -u $USER -x thunderbird || (thunderbird &)")
