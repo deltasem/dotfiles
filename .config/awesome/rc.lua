@@ -48,8 +48,7 @@ end
 -- Chosen colors and buttons look alike adapta maia theme
 beautiful.init("/home/del/.config/awesome/themes/cesious/theme.lua")
 beautiful.icon_theme = "Papirus-Dark"
-beautiful.bg_normal = "#222D32"
-beautiful.bg_focus = "#2C3940"
+
 beautiful.titlebar_close_button_normal = "/usr/share/awesome/themes/cesious/titlebar/close_normal_adapta.png"
 beautiful.titlebar_close_button_focus = "/usr/share/awesome/themes/cesious/titlebar/close_focus_adapta.png"
 beautiful.font = "Noto Sans Regular 10"
@@ -157,8 +156,6 @@ spacer2 = wibox.widget.textbox(' <span color="' .. darkblue .. '"> </span>')
 
 local separators = lain.util.separators
 local spr = wibox.widget.textbox(' ')
-local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
-local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -223,12 +220,6 @@ end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
-
-screen_tags = {
-    { "tty", "web", "dev", "con", "git", "rdp", "note", "mail", "chat" },
-    { "r&b", "con", "yrn", "dsgn", "?", "?", "?", "?", "?" },
-    { "web", "svc", "ins", "dbg", "tst", "term", "?", "?", "?" },
-}
 
 local markup = lain.util.markup
 
@@ -304,12 +295,47 @@ local cpuDiagram = cpu_widget({
 --[[]]
 
 
+screen_tags = {
+    { },
+    { "r&b", "con", "yrn", "dsgn", "?", "?", "?", "?", "?" },
+    { "web", "svc", "ins", "dbg", "tst", "term", "?", "?", "?" },
+}
+
+
+local screen_1 = { 
+    { name = "tty", icon = theme.tags_icon_tty },
+    { name = "web", icon = theme.tags_icon_web },  
+    { name = "dev", icon = theme.tags_icon_dev },
+    { name = "con", icon = theme.tags_icon_con },
+    { name = "git", icon = theme.tags_icon_git },
+    { name = "rdp", icon = theme.tags_icon_rdp },    
+    { name = "note", icon = theme.tags_icon_note },    
+    { name = "mail", icon = theme.tags_icon_mail },    
+    { name = "chat", icon = theme.tags_icon_chat },    
+};
+
+for i = 1, #screen_1 do
+    awful.tag.add(screen_1[i].name, {
+        icon = screen_1[i].icon,
+        layout =  awful.layout.layouts[1],
+        screen = 1,
+        selected = i == 1
+    })
+end
+
+
 awful.screen.connect_for_each_screen(function(s)
+
+
     -- Wallpaper
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag(screen_tags[s.index], s, awful.layout.layouts[1])
+    if s ~= 1 then
+        awful.tag(screen_tags[s.index], s, awful.layout.layouts[1])
+    end
+
+    
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -356,21 +382,23 @@ awful.screen.connect_for_each_screen(function(s)
             --	    memory,
             --separator,
             --arrl_dl,
-            memicon,
-            memory.widget,
-            arrl_ld,
-            wibox.container.background(cpuicon, theme.bg_focus),
-            wibox.container.background(cpu.widget, theme.bg_focus),
-            arrl_dl,
-            tempicon,
-            temp,
-            arrl_ld,
-            wibox.container.background(netdownicon, theme.bg_focus),
-            wibox.container.background(netdowninfo, theme.bg_focus),
-            wibox.container.background(netupicon, theme.bg_focus),
-            wibox.container.background(netupinfo.widget, theme.bg_focus),
-            arrl_dl,
+            spr,
+            separators.arrow_left(theme.bg_mem, theme.bg_mem),
+            wibox.container.background(memicon, theme.bg_mem),
+            wibox.container.background(memory.widget, theme.bg_mem),
+            separators.arrow_left(theme.bg_mem, theme.bg_cpu),
+            wibox.container.background(cpuicon, theme.bg_cpu),
+            wibox.container.background(cpu.widget, theme.bg_cpu),
+            separators.arrow_left(theme.bg_cpu, theme.bg_cpu_temp),
+            wibox.container.background(tempicon, theme.bg_cpu_temp),
+            wibox.container.background(temp.widget, theme.bg_cpu_temp),
+            separators.arrow_left(theme.bg_cpu_temp, theme.bg_net),
+            wibox.container.background(netdownicon, theme.bg_net),
+            wibox.container.background(netdowninfo, theme.bg_net),
+            wibox.container.background(netupicon, theme.bg_net),
+            wibox.container.background(netupinfo.widget, theme.bg_net),
             --cpuDiagram,
+            separators.arrow_left(theme.bg_net, theme.bg_focus),
             tray,
             mykeyboardlayout,
             separator,

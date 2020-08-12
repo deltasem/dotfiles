@@ -37,12 +37,18 @@ theme.fg_normal  = "#efebe6"
 theme.fg_focus   = "#a583f5"
 theme.fg_urgent  = "#d54523"
 theme.fg_minimize = "#ffffff"
-
+--theme.bg_normal = "#222D32"
+--theme.bg_focus = "#2C3940"
 theme.bg_normal  = "#101421"
-theme.bg_focus   = "#303441"
+theme.bg_focus   = "#343846"
 theme.bg_urgent  = theme.bg_normal
 theme.bg_systray = theme.bg_focus
 theme.bg_minimize = "#101010"
+
+theme.bg_net = "#604B44"
+theme.bg_cpu = "#344A37"
+theme.bg_cpu_temp = "#353142"
+theme.bg_mem = "#605F44"
 -- }}}
 
 -- {{{ Borders
@@ -129,7 +135,19 @@ theme.layout_cornerne   = themes_path .. "layouts/cornerne.png"
 theme.layout_cornersw   = themes_path .. "layouts/cornersw.png"
 theme.layout_cornerse   = themes_path .. "layouts/cornerse.png"
 
-theme.awesome_icon = themes_path .. "icons/manjaro64.png"
+theme.awesome_icon = themes_path .. "candy-icons/apps/scalable/distributor-logo-manjaro.svg"
+
+theme.tags_icon_tty = themes_path .. "candy-icons/apps/scalable/terminal.svg"
+theme.tags_icon_web = themes_path .. "candy-icons/apps/scalable/internet-archive.svg"
+theme.tags_icon_dev = themes_path .. "candy-icons/apps/scalable/cmake.svg"
+theme.tags_icon_con = themes_path .. "candy-icons/apps/scalable/chrome-ighkikkfkalojiibipjigpccggljgdff-Default.svg"
+theme.tags_icon_git = themes_path .. "candy-icons/apps/scalable/vscodium.svg"
+theme.tags_icon_rdp = themes_path .. "candy-icons/apps/scalable/remmina.svg"
+theme.tags_icon_note = themes_path .. "candy-icons/apps/scalable/basket.svg"
+theme.tags_icon_mail = themes_path .. "candy-icons/apps/scalable/mail-client.svg"
+theme.tags_icon_chat = themes_path .. "candy-icons/apps/scalable/slack.svg"
+
+theme.tags_icon_dbg = themes_path .. "candy-icons/apps/scalable/nemiver.svg"
 
 -- Define the icon theme for application icons. If not set then the icons 
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
