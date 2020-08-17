@@ -13,7 +13,7 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Freedesktop menu
 local freedesktop = require("freedesktop")
-local translate = require("awesome-wm-widgets.translate-widget.translate")
+-- local translate = require("awesome-wm-widgets.translate-widget.translate")
 -- local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 -- Enable VIM help for hotkeys widget when client with matching name is opened:
 require("awful.hotkeys_popup.keys.vim")
@@ -479,11 +479,11 @@ globalkeys = gears.table.join(
                 { description = "go back", group = "client" }),
 
 -- Standard program
-        awful.key({ modkey }, "c",
+--[[        awful.key({ modkey }, "c",
                 function()
                     translate.show_translate_prompt('trnsl.1.1.20200514T060346Z.f9a33d804520e0bb.a158aba3ca14739fd23ac6a2c3749cb49a7b306a')
                 end,
-                { description = "run translate prompt", group = "launcher" }),
+                { description = "run translate prompt", group = "launcher" }),]]
         awful.key({                   }, "#107", function()
             awful.util.spawn('flameshot gui')
         end,
@@ -906,7 +906,7 @@ end
 
 awful.spawn.with_shell("~/.config/awesome/autorun.sh")
 --os.execute("pgrep -u $USER -x compton || (compton &)")
-os.execute("pgrep -u $USER -x Telegram || (delay 5; telegram-desktop &)")
+--os.execute("pgrep -u $USER -x Telegram || (delay 5; telegram-desktop &)")
 os.execute("pgrep -u $USER -x slack || (slack &)")
 os.execute("pgrep -u $USER -x notable || (notable &)")
 os.execute("pgrep -u $USER -x thunderbird || (thunderbird &)")
