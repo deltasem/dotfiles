@@ -70,13 +70,13 @@ modkey = "Mod4"
 awful.layout.layouts = {
     awful.layout.suit.tile,
     awful.layout.suit.floating,
-    --awful.layout.suit.tile.left,
+    awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
-    -- awful.layout.suit.tile.top,
+    awful.layout.suit.tile.top,
     awful.layout.suit.fair,
     awful.layout.suit.fair.horizontal,
-    -- awful.layout.suit.spiral,
-    -- awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.spiral,
+    awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max,
     -- awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
@@ -219,7 +219,7 @@ local function set_wallpaper(s)
 end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", set_wallpaper)
+-- screen.connect_signal("property::geometry", set_wallpaper)
 
 local markup = lain.util.markup
 
@@ -295,32 +295,52 @@ local cpuDiagram = cpu_widget({
 --[[]]
 
 
+--[[
 screen_tags = {
     { },
-    { "r&b", "con", "yrn", "dsgn", "?", "?", "?", "?", "?" },
-    { "web", "svc", "ins", "dbg", "tst", "term", "?", "?", "?" },
+   { "r&b", "con", "yrn", "dsgn", "?", "?", "?", "?", "?" },
+   { "chr", "svc", "ins", "dbg", "tst", "term", "dsgn", "yrn", "build" },
 }
+]]--
 
 
-local screen_1 = { 
-    { name = "tty", icon = theme.tags_icon_tty },
+local screens = {
+	{ 
+    { name = "tty", icon = theme.tags_icon_tty, gap = 3 },
     { name = "web", icon = theme.tags_icon_web },  
-    { name = "dev", icon = theme.tags_icon_dev },
+    { name = "dev", icon = theme.tags_icon_dev, master_width_factor = 0.85 },
     { name = "con", icon = theme.tags_icon_con },
     { name = "git", icon = theme.tags_icon_git },
     { name = "rdp", icon = theme.tags_icon_rdp },    
     { name = "note", icon = theme.tags_icon_note },    
     { name = "mail", icon = theme.tags_icon_mail },    
     { name = "chat", icon = theme.tags_icon_chat },    
+	},
+	{
+    { name = "chr", icon = theme.tags_icon_chr },
+    { name = "svc", icon = theme.tags_icon_svc },  
+    { name = "ins", icon = theme.tags_icon_ins },
+    { name = "dbg", icon = theme.tags_icon_dbg },
+    { name = "tst", icon = theme.tags_icon_tst },
+    { name = "term", icon = theme.tags_icon_term },    
+    { name = "dsgn", icon = theme.tags_icon_dsgn },    
+    { name = "yrn", icon = theme.tags_icon_yrn },    
+    { name = "build", icon = theme.tags_icon_build, gap = 3 },    
+	}
 };
 
-for i = 1, #screen_1 do
-    awful.tag.add(screen_1[i].name, {
-        icon = screen_1[i].icon,
-        layout =  awful.layout.layouts[1],
-        screen = 1,
-        selected = i == 1
-    })
+for j = 1, #screens do
+	local scrn = screens[j]
+  for i = 1, #scrn do
+      awful.tag.add(scrn[i].name, {
+          icon = scrn[i].icon,
+          gap = scrn[i].gap,
+          layout =  awful.layout.layouts[1],
+          screen = j,
+          selected = i == 1,
+					master_width_factor = scrn[i].master_width_factor
+      })
+  end
 end
 
 
@@ -328,12 +348,12 @@ awful.screen.connect_for_each_screen(function(s)
 
 
     -- Wallpaper
-    set_wallpaper(s)
+    -- set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    if s ~= 1 then
-        awful.tag(screen_tags[s.index], s, awful.layout.layouts[1])
-    end
+--    if s ~= 1 then
+--        awful.tag(screen_tags[s.index], s, awful.layout.layouts[1])
+--    end
 
     
 
@@ -422,8 +442,49 @@ root.buttons(gears.table.join(
 ))
 -- }}}
 
+local function gotoTag(name)
+	local t = awful.tag.find_by_name(nil, name)
+	for i = 1, #t.screen.selected_tags do
+		t.screen.selected_tags[i].selected = false
+	end
+	t.selected = true
+	--t:view_only()
+end
+
+local function gotoFigma()
+	gotoTag("dsgn")
+end
+
+local function gotoChrome()
+	gotoTag("chr")
+end
+
+local function gotoDev()
+	gotoTag("dev")
+end
+
+local function gotoGit()
+	gotoTag("git")
+end
+
+local function gotoWeb()
+	gotoTag("web")
+end
+
+local function gotoBuild()
+	gotoTag("build")
+end
+
 -- {{{ Key bindings
 globalkeys = gears.table.join(
+        awful.key({ modkey, }, "d",  gotoDev, { description = "dev", group = "tags shortcut" }),
+        awful.key({ modkey, }, "c",  gotoChrome, { description = "chrome", group = "tags shortcut" }),
+        awful.key({ modkey, }, "f",  gotoFigma, { description = "figma", group = "tags shortcut" }),
+        awful.key({ modkey, }, "g",  gotoGit, { description = "git", group = "tags shortcut" }),
+        awful.key({ modkey, }, "w",  gotoWeb, { description = "web", group = "tags shortcut" }),
+        awful.key({ modkey, }, "b",  gotoBuild, { description = "build", group = "tags shortcut" }),
+
+
         awful.key({ modkey, }, "s", hotkeys_popup.show_help,
                 { description = "show help", group = "awesome" }),
         awful.key({ modkey, }, "Left", awful.tag.viewprev,
@@ -445,10 +506,12 @@ globalkeys = gears.table.join(
                 end,
                 { description = "focus previous by index", group = "client" }
         ),
+--[[       
         awful.key({ modkey, }, "w", function()
             mymainmenu:show()
         end,
                 { description = "show main menu", group = "awesome" }),
+]]--
 
 -- Layout manipulation
         awful.key({ modkey, "Shift" }, "j", function()
@@ -530,7 +593,7 @@ globalkeys = gears.table.join(
             awful.util.spawn("/usr/bin/vifm")
         end,
                 { description = "launch vifm", group = "launcher" }),
-        awful.key({ modkey }, "b", function()
+        awful.key({ modkey, "Control" }, "b", function()
             awful.spawn(browser)
         end,
                 { description = "launch Browser", group = "launcher" }),
@@ -598,7 +661,7 @@ globalkeys = gears.table.join(
 )
 
 clientkeys = gears.table.join(
-        awful.key({ modkey, }, "f",
+        awful.key({ modkey, "Shift" }, "f",
                 function(c)
                     c.fullscreen = not c.fullscreen
                     c:raise()
@@ -770,14 +833,17 @@ awful.rules.rules = {
     { rule = { class = "Firefox" }, properties = { screen = 1, tag = "web" } },
     { rule = { class = "TelegramDesktop" }, properties = { titlebars_enabled = false, screen = 1, tag = "chat" } },
     { rule = { class = "Slack" }, properties = { titlebars_enabled = false, screen = 1, tag = "chat" } },
-    { rule = { class = "Chromium" }, properties = { titlebars_enabled = false, screen = 3, tag = "web" } },
+    { rule = { class = "Chromium" }, properties = { titlebars_enabled = false, screen = 2, tag = "chr" } },
+    { rule = { class = "Chromium", name = "*Figma - Chromium" }, properties = { titlebars_enabled = false, screen = 2, tag = "dsgn" } },
     { rule = { class = "Notable" }, properties = { titlebars_enabled = false, screen = 1, tag = "note" } },
     { rule = { class = "Thunderbird" }, properties = { titlebars_enabled = false, screen = 1, tag = "mail" } },
     { rule = { class = "Qmmp" }, properties = { titlebars_enabled = false, screen = 1, tag = "tty" } },
-    { rule = { class = "jetbrains-rider", name = "Services - *" }, properties = { screen = 3, tag = "svc" } },
-    { rule = { class = "jetbrains-rider", name = "Unit Tests - *" }, properties = { screen = 3, tag = "tst" } },
-    { rule = { class = "jetbrains-rider", name = "Terminal - *" }, properties = { screen = 3, tag = "term" } },
-    { rule = { class = "jetbrains-rider", name = "Debug - *" }, properties = { screen = 3, tag = "dbg" } },
+    { rule = { class = "jetbrains-rider", name = "Services - *" }, properties = { screen = 2, tag = "svc" } },
+    { rule = { class = "jetbrains-rider", name = "Unit Tests - *" }, properties = { screen = 2, tag = "tst" } },
+    { rule = { class = "jetbrains-rider", name = "Terminal - *" }, properties = { screen = 2, tag = "term" } },
+    { rule = { class = "jetbrains-rider", name = "Debug - *" }, properties = { screen = 2, tag = "dbg" } },
+    { rule = { class = "jetbrains-rider", name = "Build - *" }, properties = { screen = 2, tag = "build" } },
+    { rule = { class = "jetbrains-rider", name = "Run - *" }, properties = { screen = 2, tag = "build" } },
 }
 -- }}}
 
@@ -904,8 +970,11 @@ end
 --    end
 --end)
 
+awful.spawn.with_shell("nitrogen --restore")
+-- awful.spawn.with_shell("picom --config  $HOME/.config/picom/picom.conf")
+
 awful.spawn.with_shell("~/.config/awesome/autorun.sh")
---os.execute("pgrep -u $USER -x compton || (compton &)")
+os.execute("pgrep -u $USER -x compton || (compton &)")
 --os.execute("pgrep -u $USER -x Telegram || (delay 5; telegram-desktop &)")
 os.execute("pgrep -u $USER -x slack || (slack &)")
 os.execute("pgrep -u $USER -x notable || (notable &)")
@@ -913,4 +982,3 @@ os.execute("pgrep -u $USER -x thunderbird || (thunderbird &)")
 os.execute("pgrep -u $USER -x remmina || (remmina -i &)")
 os.execute("xset -display $DISPLAY s off -dpms")
 os.execute("/home/del/nfancurve/temp.sh &")
-

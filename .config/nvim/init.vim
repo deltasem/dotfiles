@@ -11,10 +11,14 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'itchyny/lightline.vim'                       " Lightline statusbar
 Plugin 'skwp/vim-easymotion'
+Plugin 'vifm/vifm.vim'
+Plugin 'ap/vim-css-color'
 
 " themes
 Plugin 'morhetz/gruvbox'
 Plugin 'chriskempson/base16-vim'
+
+Plugin 'preservim/nerdtree'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -33,6 +37,8 @@ set number relativenumber       " Display line numbers
 set clipboard=unnamedplus       " Copy/paste between vim and other programs.
 syntax enable
 let g:rehash256 = 1
+set cursorline " higlight current line
+set mouse=a
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -72,3 +78,6 @@ set tabstop=2                   " One tab == four spaces.
 let base16colorspace=256
 "colorscheme base16-solarized-dark
 colorscheme gruvbox
+
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif

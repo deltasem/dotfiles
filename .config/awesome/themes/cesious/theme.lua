@@ -115,7 +115,7 @@ theme.titlebar_maximized_button_focus_active    = themes_path .. "titlebar/maxim
 
 -- theme.wallpaper = themes_path .. "cesious/awesome-scrabble.png"
 -- theme.wallpaper = "/big/distr/old/wallpapers/" .. "18905_1920x1080_ugadajkin.com.jpg"
-theme.wallpaper = "/big/distr/old/wallpapers/" .. "Wallpapers Autumn Pack/Autumn Wallpapers (8).jpg"
+-- theme.wallpaper = "/big/distr/old/wallpapers/" .. "Wallpapers Autumn Pack/Autumn Wallpapers (8).jpg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh      = themes_path .. "layouts/fairh.png"
@@ -147,7 +147,15 @@ theme.tags_icon_note = themes_path .. "candy-icons/apps/scalable/basket.svg"
 theme.tags_icon_mail = themes_path .. "candy-icons/apps/scalable/mail-client.svg"
 theme.tags_icon_chat = themes_path .. "candy-icons/apps/scalable/slack.svg"
 
+theme.tags_icon_chr = themes_path .. "candy-icons/apps/scalable/chrome-ighkikkfkalojiibipjigpccggljgdff-Default.svg"
+theme.tags_icon_svc = themes_path .. "candy-icons/apps/scalable/qv4l2.svg"
+theme.tags_icon_ins = themes_path .. "candy-icons/apps/scalable/insomnia.svg"
 theme.tags_icon_dbg = themes_path .. "candy-icons/apps/scalable/nemiver.svg"
+theme.tags_icon_tst = themes_path .. "candy-icons/apps/scalable/update-manager.svg"
+theme.tags_icon_term = themes_path .. "candy-icons/apps/scalable/terminix.svg"
+theme.tags_icon_dsgn = themes_path .. "candy-icons/apps/scalable/pick-colour-picker.svg"
+theme.tags_icon_yrn = themes_path .. "candy-icons/apps/scalable/yast-disk.svg"
+theme.tags_icon_build = themes_path .. "candy-icons/apps/scalable/codeblocks.svg"
 
 -- Define the icon theme for application icons. If not set then the icons 
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
